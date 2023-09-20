@@ -4,8 +4,13 @@ import remarkParse from 'remark-parse'
 import remarkHtml from 'remark-html'
 import http from 'http'
 import url from 'url'
+import 'dotenv/config'
 
-var invalidPathArr = ['favicon.ico'];
+// Set variables
+var invalidPathArr = process.env.INVALID_URLS.split(' ');
+var blogDir = process.env.BLOG_DIR;
+var blogFileType = process.env.BLOG_FILE_TYPE;
+var port = process.env.PORT;
 
 async function readFile(fileLoc) {
   const file = await unified()
@@ -24,7 +29,7 @@ http.createServer(function (req, res) {
   var valid = (invalidPathArr.indexOf(path) >= 0) ? false : true;
   if (valid) {
     // Get markdown file from URL path
-    var fileLoc = 'files/' + path + '.md';
+    var fileLoc = blogDir + '/' + path + blogFileType;
     // call markdown converter and send HTML
     const text = readFile(fileLoc).then(
         function(result) {res.end(result);}
@@ -32,4 +37,4 @@ http.createServer(function (req, res) {
   } else {
     res.end();
   }
-}).listen(8080);
+}).listen(port);
