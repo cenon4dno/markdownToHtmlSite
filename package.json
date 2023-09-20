@@ -1,0 +1,20 @@
+{
+  "type": "module",
+  "dependencies": {
+    "http": "^0.0.1-security",
+    "remark-html": "^15.0.2",
+    "remark-parse": "^11.0.0",
+    "to-vfile": "^8.0.0",
+    "unified": "^11.0.3",
+    "url": "^0.11.3"
+  },
+  "name": "markdowntohtmlsite",
+  "description": "<h1>   <img src=\"https://raw.githubusercontent.com/vfile/vfile/fc8164b/logo.svg?sanitize=true\" alt=\"vfile\" /> </h1>",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Cenon Ebora",
+  "license": "ISC"
+}
