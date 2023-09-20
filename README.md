@@ -92,8 +92,3 @@ To add in Markdown format, use this code:
 ## Example Readmes
 
 To see how the specification has been applied, see the [example-readmes](example-readmes/).
-
-
-## License
-
-[MIT](LICENSE) © Richard Littauer
