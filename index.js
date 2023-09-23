@@ -43,7 +43,6 @@ http.createServer(function (req, res) {
     const text = fs.readFile(layout, { encoding: 'utf8' })
     .then(
       function(data) {
-        console.log(data);
         result = data;
         // call content
         return readFile(fileLoc);
@@ -51,7 +50,6 @@ http.createServer(function (req, res) {
     )
       .then(
           function(data) {
-            console.log(data);
             result = result.replace("CCCC", data);
             // call Menu
             return readFile(defaultDir + '/menu' + blogFileType);
