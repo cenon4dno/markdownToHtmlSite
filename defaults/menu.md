@@ -1,0 +1,5 @@
+*   [Home](/)
+*   [About](/about)
+*   [Resume](/resume)
+*   [Blog](#when-should-i-use-this)
+*   [Contact me](#install)
