@@ -1,33 +1,28 @@
-import {read} from 'to-vfile'
-import {unified} from 'unified'
-import remarkParse from 'remark-parse'
-import remarkHtml from 'remark-html'
 import http from 'http'
 import url from 'url'
 import fs from 'mz/fs.js'
 import 'dotenv/config'
+import {readAndConvertToHtml} from './util/MarkdownToHtml.js'
 
-// Set variables
+// Retrieve and set env vairables
 var invalidPathArr = process.env.INVALID_URLS.split(' ');
 var blogDir = process.env.BLOG_DIR;
 var blogFileType = process.env.BLOG_FILE_TYPE;
 var port = process.env.PORT;
-var defaultDir = process.env.DEFAULT_DIR;
-var home = process.env.DEFAULT_HOME;
-var layout = defaultDir + '/' + process.env.DEFAULT_LAYOUT;
+var siteDir = process.env.SITE_DIR;
+var home = process.env.SITE_HOME;
+var title = process.env.SITE_TITLE;
+var footer = process.env.SITE_FOOTER;
+var layout = siteDir + '/' + process.env.SITE_LAYOUT;
+var title_placeholder = process.env.SITE_TITLE_PLACEHOLDER;
+var menu_placeholder = process.env.SITE_MENU_PLACEHOLDER;
+var content_placeholder = process.env.SITE_CONTENT_PLACEHOLDER;
+var footer_placeholder = process.env.SITE_FOOTER_PLACEHOLDER;
 
-async function readFile(fileLoc) {
-  const file = await unified()
-    .use(remarkParse)
-    .use(remarkHtml)
-    .process(await read(fileLoc))
-
-  return String(file);
-}
-
+// Create a server running on :port
 http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/html'});
-  // Get URL
+  // Get URL and extract the path
   var path = url.parse(req.url,true).pathname;
   path = path.replace(/\//g,'');  
   var valid = (invalidPathArr.indexOf(path) >= 0) ? false : true;
@@ -36,30 +31,33 @@ http.createServer(function (req, res) {
     if (path != '') {
       var fileLoc = blogDir + '/' + path + blogFileType;
     } else {
-      var fileLoc = defaultDir + '/' + home + blogFileType;
+      var fileLoc = siteDir + '/' + home + blogFileType;
     }
-    // call markdown converter and send HTML
+    // Call markdown converter and send HTML
     var result = "";
+    // Call the layout of the page
     const text = fs.readFile(layout, { encoding: 'utf8' })
     .then(
       function(data) {
         result = data;
-        // call content
-        return readFile(fileLoc);
+        result = result.replace(title_placeholder, title);
+        result = result.replace(footer_placeholder, footer);
+        // Call content
+        return readAndConvertToHtml(fileLoc);
       }
     )
-      .then(
-          function(data) {
-            result = result.replace("CCCC", data);
-            // call Menu
-            return readFile(defaultDir + '/menu' + blogFileType);
-          }
-      )
-      .then(
+    .then(
         function(data) {
-          result = result.replace("MMMM", data);
-          res.end(result);
+          result = result.replace(content_placeholder, data);
+          // Call Menu
+          return readAndConvertToHtml(siteDir + '/menu' + blogFileType);
         }
+    )
+    .then(
+      function(data) {
+        result = result.replace(menu_placeholder, data);
+        res.end(result);
+      }
     );
   } else {
     res.end();
