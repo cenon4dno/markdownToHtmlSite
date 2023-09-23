@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/66e6dec1-f674-4be4-a2ad-51c2e73bac61/resourceGroups/cenonebora-websites/providers/Microsoft.Web/sites/me-markdown-site01",
+    "appService.deploySubpath": "."
+}

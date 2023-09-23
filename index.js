@@ -2,7 +2,7 @@ import http from 'http'
 import url from 'url'
 import fs from 'mz/fs.js'
 import 'dotenv/config'
-import {readAndConvertToHtml} from './util/MarkdownToHtml.js'
+import {readAndConvertToHtml} from './util/markdownToHtml.js'
 
 // Retrieve and set env vairables
 var invalidPathArr = process.env.INVALID_URLS.split(' ');
@@ -24,15 +24,17 @@ http.createServer(function (req, res) {
   res.writeHead(200, {'Content-Type': 'text/html'});
   // Get URL and extract the path
   var path = url.parse(req.url,true).pathname;
-  path = path.replace(/\//g,'');  
+  path = path.replace(/\//g,'');
+
   var valid = (invalidPathArr.indexOf(path) >= 0) ? false : true;
+  // Get markdown file from URL path
+  if (path != '') {
+    var fileLoc = blogDir + '/' + path + blogFileType;
+  } else {
+    var fileLoc = siteDir + '/' + home + blogFileType;
+  }
+  
   if (valid) {
-    // Get markdown file from URL path
-    if (path != '') {
-      var fileLoc = blogDir + '/' + path + blogFileType;
-    } else {
-      var fileLoc = siteDir + '/' + home + blogFileType;
-    }
     // Call markdown converter and send HTML
     var result = "";
     // Call the layout of the page
